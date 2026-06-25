@@ -192,14 +192,13 @@ RUN curl -LO https://download.rockylinux.org/pub/rocky/9/devel/aarch64/os/Packag
     dnf install -y ./rpcgen-1.4-9.el9.aarch64.rpm && \
     rm -f rpcgen-1.4-9.el9.aarch64.rpm
 
-# rpcgen is also not available from repositories so build from source
-#RUN dnf install -y flex bison gettext-devel && \
-#    curl -LO https://github.com/thkukuk/rpcsvc-proto/releases/download/v1.4.4/rpcsvc-proto-1.4.4.tar.gz && \
-#    tar xzf rpcsvc-proto-1.4.4.tar.gz && \
-#    cd rpcsvc-proto-1.4.4 && \
-#    ./configure && \
-#    make && \
-#    make install
+# pzstd is not availble from UBI repositories so build from source
+RUN curl -LO https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz && \
+    tar xzf zstd-1.5.7.tar.gz && \
+    cd zstd-1.5.7/contrib/pzstd && \
+    make && \
+    install -m755 pzstd /usr/local/bin/pzstd && \
+    cd /tmp && rm -rf zstd-1.5.7*
 
 # Set the locale
 ENV LANG=en_US.utf8
