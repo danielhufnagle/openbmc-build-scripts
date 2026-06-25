@@ -176,7 +176,11 @@ RUN dnf --refresh install -y \
     glibc-locale-source \
     zstd \
     diffutils \
-    xz
+    xz \
+    perl-File-Compare \
+    perl-File-Copy \
+    perl-open \
+    perl-FindBin
 
 # diffstat is not available from repositories so build from source
 RUN dnf --refresh install -y ncurses-devel && \
@@ -209,6 +213,9 @@ RUN wget https://downloads.yoctoproject.org/releases/yocto/yocto-4.0.17/buildtoo
 # Prepend the buildtools path to the system PATH variable
 ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
 
+ENV OECORE_NATIVE_SYSROOT="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux"
+ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
+ENV PERL5LIB="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/site_perl/5.34.1:/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/5.34.1"
 # Set the locale
 ENV LANG=en_US.utf8
 RUN localedef -f UTF-8 -i en_US en_US.UTF-8
