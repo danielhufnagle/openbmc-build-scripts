@@ -180,7 +180,8 @@ RUN dnf --refresh install -y \
     perl-File-Compare \
     perl-File-Copy \
     perl-open \
-    perl-FindBin
+    perl-FindBin \
+    perl-libs
 
 # diffstat is not available from repositories so build from source
 RUN dnf --refresh install -y ncurses-devel && \
