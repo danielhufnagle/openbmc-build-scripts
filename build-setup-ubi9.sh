@@ -179,13 +179,27 @@ RUN dnf --refresh install -y \
     xz
 
 # diffstat is not available from repositories so build from source
-RUN dnf --refresh install -y ncurses-devel
-RUN curl -LO https://invisible-island.net/datafiles/release/diffstat.tar.gz
-RUN tar xzf diffstat.tar.gz
-RUN cd diffstat-* && \
+RUN dnf --refresh install -y ncurses-devel && \
+    curl -LO https://invisible-island.net/datafiles/release/diffstat.tar.gz && \
+    tar xzf diffstat.tar.gz && \
+    cd diffstat-* && \
     ./configure && \
     make && \
     make install
+
+# rpcgen is also nto availeble from UBI repositories so pull from rockyulinux repos instead of building from source
+RUN curl -LO https://download.rockylinux.org/pub/rocky/9/devel/aarch64/os/Packages/r/rpcgen-1.4-9.el9.aarch64.rpm && \
+    dnf install -y ./rpcgen-1.4-9.el9.aarch64.rpm && \
+    rm -f rpcgen-1.4-9.el9.aarch64.rpm
+
+# rpcgen is also not available from repositories so build from source
+#RUN dnf install -y flex bison gettext-devel && \
+#    curl -LO https://github.com/thkukuk/rpcsvc-proto/releases/download/v1.4.4/rpcsvc-proto-1.4.4.tar.gz && \
+#    tar xzf rpcsvc-proto-1.4.4.tar.gz && \
+#    cd rpcsvc-proto-1.4.4 && \
+#    ./configure && \
+#    make && \
+#    make install
 
 # Set the locale
 ENV LANG=en_US.utf8
