@@ -187,18 +187,27 @@ RUN dnf --refresh install -y ncurses-devel && \
     make && \
     make install
 
-# rpcgen is also nto availeble from UBI repositories so pull from rockyulinux repos instead of building from source
+# rpcgen is also not available from UBI repositories so pull from rockyulinux repos instead of building from source
 RUN curl -LO https://download.rockylinux.org/pub/rocky/9/devel/aarch64/os/Packages/r/rpcgen-1.4-9.el9.aarch64.rpm && \
     dnf install -y ./rpcgen-1.4-9.el9.aarch64.rpm && \
     rm -f rpcgen-1.4-9.el9.aarch64.rpm
 
-# pzstd is not availble from UBI repositories so build from source
+# pzstd is not available from UBI repositories so build from source
 RUN curl -LO https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz && \
     tar xzf zstd-1.5.7.tar.gz && \
     cd zstd-1.5.7/contrib/pzstd && \
     make && \
     install -m755 pzstd /usr/local/bin/pzstd && \
     cd /tmp && rm -rf zstd-1.5.7*
+
+# RHEL9 UBI tar is outdated
+RUN wget https://downloads.yoctoproject.org/releases/yocto/yocto-4.0.17/buildtools/aarch64-buildtools-nativesdk-standalone-4.0.17.sh && \
+    chmod +x aarch64-buildtools-nativesdk-standalone-4.0.17.sh && \
+    ./aarch64-buildtools-nativesdk-standalone-4.0.17.sh -y -d /opt/yocto-buildtools && \
+    rm aarch64-buildtools-nativesdk-standalone-4.0.17.sh
+
+# Prepend the buildtools path to the system PATH variable
+ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
 
 # Set the locale
 ENV LANG=en_US.utf8
