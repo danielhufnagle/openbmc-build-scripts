@@ -181,7 +181,11 @@ RUN dnf --refresh install -y \
     perl-File-Copy \
     perl-open \
     perl-FindBin \
-    perl-libs
+    perl-libs \
+    perl-core \
+    perl-locale \
+    gcc-toolset-12-gcc \
+    gcc-toolset-12-gcc-c++
 
 # diffstat is not available from repositories so build from source
 RUN dnf --refresh install -y ncurses-devel && \
@@ -223,6 +227,19 @@ RUN localedef -f UTF-8 -i en_US en_US.UTF-8
 
 RUN grep -q ${GROUPS[0]} /etc/group || groupadd -g ${GROUPS[0]} ${USER}
 RUN grep -q ${UID} /etc/passwd || useradd -d ${HOME} -m -u ${UID} -g ${GROUPS[0]} ${USER}
+
+# Set gcc-12 as the compiler
+ENV PATH=/opt/rh/gcc-toolset-12/root/usr/bin:$PATH
+ENV LD_LIBRARY_PATH=/opt/rh/gcc-toolset-12/root/usr/lib64:$LD_LIBRARY_PATH
+ENV PKG_CONFIG_PATH=/opt/rh/gcc-toolset-12/root/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
+
+# Backup the default GCC 11 compiler binaries
+RUN mv /usr/bin/gcc /usr/bin/gcc.bak
+RUN mv /usr/bin/g++ /usr/bin/g++.bak
+
+# Symlink GCC 12 directly into the native system paths
+RUN ln -s /opt/rh/gcc-toolset-12/root/usr/bin/gcc /usr/bin/gcc
+RUN ln -s /opt/rh/gcc-toolset-12/root/usr/bin/g++ /usr/bin/g++
 
 USER ${USER}
 ENV HOME=${HOME}
