@@ -195,24 +195,25 @@ RUN dnf --refresh install -y ncurses-devel && \
     make install
 
 # rpcgen is also not available from UBI repositories so pull from rockyulinux repos instead of building from source
-RUN curl -LO https://download.rockylinux.org/pub/rocky/10/devel/aarch64/os/Packages/r/rpcgen-1.4-17.el10.aarch64.rpm && \
-    dnf install -y ./rpcgen-1.4-17.el10.aarch64.rpm && \
-    rm -f rpcgen-1.4-17.el10.aarch64.rpm
+RUN ARCH=\$(uname -m) && \
+    curl -LO https://download.rockylinux.org/pub/rocky/10/devel/\${ARCH}/os/Packages/r/rpcgen-1.4-17.el10.\${ARCH}.rpm && \
+    dnf install -y ./rpcgen-1.4-17.el10.\${ARCH}.rpm && \
+    rm -f rpcgen-1.4-17.el10.\${ARCH}.rpm
 
 # pzstd is not available from UBI repositories so build from source
-RUN curl -LO https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz && \
-    tar xzf zstd-1.5.7.tar.gz && \
-    cd zstd-1.5.7/contrib/pzstd && \
-    make && \
-    install -m755 pzstd /usr/local/bin/pzstd && \
-    cd /tmp && rm -rf zstd-1.5.7*
+#RUN curl -LO https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz && \
+#    tar xzf zstd-1.5.7.tar.gz && \
+#    cd zstd-1.5.7/contrib/pzstd && \
+#    make && \
+#    install -m755 pzstd /usr/local/bin/pzstd && \
+#    cd /tmp && rm -rf zstd-1.5.7*
 
 # Prepend the buildtools path to the system PATH variable
-ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
+#ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
 
-ENV OECORE_NATIVE_SYSROOT="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux"
-ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
-ENV PERL5LIB="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/site_perl/5.40.2:/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/5.40.2"
+#ENV OECORE_NATIVE_SYSROOT="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux"
+#ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
+#ENV PERL5LIB="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/site_perl/5.40.2:/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/5.40.2"
 # Set the locale
 ENV LANG=en_US.utf8
 RUN localedef -f UTF-8 -i en_US en_US.UTF-8
