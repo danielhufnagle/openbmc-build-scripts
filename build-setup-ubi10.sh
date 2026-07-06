@@ -185,7 +185,7 @@ RUN dnf --refresh install -y \
     perl-core \
     perl-locale \
 
-# diffstat is not available from repositories so build from source
+# diffstat is not available from UBI repositories so build from source
 RUN dnf --refresh install -y ncurses-devel && \
     curl -LO https://invisible-island.net/datafiles/release/diffstat.tar.gz && \
     tar xzf diffstat.tar.gz && \
@@ -200,20 +200,6 @@ RUN ARCH=\$(uname -m) && \
     dnf install -y ./rpcgen-1.4-17.el10.\${ARCH}.rpm && \
     rm -f rpcgen-1.4-17.el10.\${ARCH}.rpm
 
-# pzstd is not available from UBI repositories so build from source
-#RUN curl -LO https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz && \
-#    tar xzf zstd-1.5.7.tar.gz && \
-#    cd zstd-1.5.7/contrib/pzstd && \
-#    make && \
-#    install -m755 pzstd /usr/local/bin/pzstd && \
-#    cd /tmp && rm -rf zstd-1.5.7*
-
-# Prepend the buildtools path to the system PATH variable
-#ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
-
-#ENV OECORE_NATIVE_SYSROOT="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux"
-#ENV PATH="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/bin:${PATH}"
-#ENV PERL5LIB="/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/site_perl/5.40.2:/opt/yocto-buildtools/sysroots/aarch64-pokysdk-linux/usr/lib/perl5/5.40.2"
 # Set the locale
 ENV LANG=en_US.utf8
 RUN localedef -f UTF-8 -i en_US en_US.UTF-8

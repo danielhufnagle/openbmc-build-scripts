@@ -209,7 +209,7 @@ RUN curl -LO https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.
     install -m755 pzstd /usr/local/bin/pzstd && \
     cd /tmp && rm -rf zstd-1.5.7*
 
-# RHEL9 UBI tar is outdated
+# RHEL9 UBI tar is outdated, so use yoctoproject buildtools instead
 RUN wget https://downloads.yoctoproject.org/releases/yocto/yocto-4.0.17/buildtools/aarch64-buildtools-nativesdk-standalone-4.0.17.sh && \
     chmod +x aarch64-buildtools-nativesdk-standalone-4.0.17.sh && \
     ./aarch64-buildtools-nativesdk-standalone-4.0.17.sh -y -d /opt/yocto-buildtools && \
